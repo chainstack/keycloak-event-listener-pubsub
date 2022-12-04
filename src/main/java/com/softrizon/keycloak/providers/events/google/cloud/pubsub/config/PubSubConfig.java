@@ -38,7 +38,7 @@ public class PubSubConfig {
     public Map<String, String> getMessageAttributes(AdminEvent event) {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("format", EVENT_FORMAT);
-        // Event example: ADMIN.<REALM_ID>.<RESULT = SUCCESS | ERROR>.<RESOURCE_TYPE>.<OPERATION>
+        // Event example: ADMIN.<REALM_ID>.<RESULT = SUCCESS | ERROR>.<RESOURCE_TYPE>.<OPERATION_TYPE>
         final String eventName = String.format(Locale.US, "ADMIN.%s.%s.%s.%s",
                 removeDots(event.getRealmId()),
                 (event.getError() == null ? "SUCCESS" : "ERROR"),
