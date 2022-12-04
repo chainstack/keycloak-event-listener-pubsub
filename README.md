@@ -14,5 +14,5 @@ Event representation published to pub/sub
 Message attributes
 format = JSON_API_V1
 event =
-    USER_<REALM_ID>_<RESULT = SUCCESS | ERROR>_<CLIENT_ID>_<EVENT_TYPE>
-    ADMIN_<REALM_ID>_<RESULT = SUCCESS | ERROR>_<RESOURCE_TYPE>_<OPERATION>
+    USER.<REALM_ID>.<RESULT = SUCCESS | ERROR>.<EVENT_TYPE>
+    ADMIN.<REALM_ID>.<RESULT = SUCCESS | ERROR>.<OPERATION>

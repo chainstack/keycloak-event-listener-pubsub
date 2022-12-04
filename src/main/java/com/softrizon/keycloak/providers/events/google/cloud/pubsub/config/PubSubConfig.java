@@ -15,7 +15,7 @@ public class PubSubConfig {
     public static final String EVENT_FORMAT = "JSON_API_V1";
 
     private static final Logger logger = Logger.getLogger(PubSubConfig.class);
-    private static final Pattern SPECIAL_CHARACTERS = Pattern.compile("[^a-zA-Z0-9_]");
+    private static final Pattern SPECIAL_CHARACTERS = Pattern.compile("[^a-zA-Z0-9_.-]");
     private static final Pattern SPACE = Pattern.compile(" ");
     private static final Pattern DOT = Pattern.compile("\\.");
 
@@ -38,11 +38,10 @@ public class PubSubConfig {
     public Map<String, String> getMessageAttributes(AdminEvent event) {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("format", EVENT_FORMAT);
-        // Event example: ADMIN_<REALM_ID>_<RESULT = SUCCESS | ERROR>_<RESOURCE_TYPE>_<OPERATION>
-        final String eventName = String.format(Locale.US, "ADMIN_%s_%s_%s_%s",
+        // Event example: ADMIN.<REALM_ID>.<RESULT = SUCCESS | ERROR>.<OPERATION>
+        final String eventName = String.format(Locale.US, "ADMIN.%s.%s.%s",
                 removeDots(event.getRealmId()),
                 (event.getError() == null ? "SUCCESS" : "ERROR"),
-                event.getResourceTypeAsString(),
                 event.getOperationType().toString());
         attributes.put("event", normalizeEventName(eventName));
 
@@ -52,11 +51,10 @@ public class PubSubConfig {
     public Map<String, String> getMessageAttributes(Event event) {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("format", EVENT_FORMAT);
-        // Event example: USER_<REALM_ID>_<RESULT = SUCCESS | ERROR>_<CLIENT_ID>_<EVENT_TYPE>
-        final String eventName = String.format(Locale.US, "USER_%s_%s_%s_%s",
+        // Event example: USER.<REALM_ID>.<RESULT = SUCCESS | ERROR>.<EVENT_TYPE>
+        final String eventName = String.format(Locale.US, "USER.%s.%s.%s",
                 removeDots(event.getRealmId()),
                 (event.getError() == null ? "SUCCESS" : "ERROR"),
-                removeDots(event.getClientId()),
                 event.getType().toString());
         attributes.put("event", normalizeEventName(eventName));
 
@@ -102,18 +100,21 @@ public class PubSubConfig {
         return value;
     }
 
-    private String normalizeEventName(CharSequence eventName) {
+    public static String normalizeEventName(CharSequence eventName) {
         if (eventName != null) {
             return SPACE.matcher(SPECIAL_CHARACTERS.matcher(eventName).replaceAll(""))
-                    .replaceAll("_");
+                    .replaceAll("_")
+                    .toUpperCase(Locale.US);
         }
 
         return null;
     }
 
-    private static String removeDots(String string) {
+    public static String removeDots(String string) {
         if (string != null) {
-            return DOT.matcher(string).replaceAll("");
+            return DOT.matcher(string)
+                    .replaceAll("")
+                    .toUpperCase(Locale.US);
         }
 
         return null;
