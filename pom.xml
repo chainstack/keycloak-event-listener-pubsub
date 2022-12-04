@@ -49,13 +49,6 @@
             <version>${keycloak.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-saml-core-public</artifactId>
-            <scope>provided</scope>
-            <version>${keycloak.version}</version>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/com.google.cloud/google-cloud-pubsub -->
         <dependency>
             <groupId>com.google.cloud</groupId>
@@ -63,4 +56,40 @@
             <version>${google-cloud-pubsub.version}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <finalName>event-listener-pubsub-${project.version}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
+
+            <!-- Maven Assembly Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <finalName>${jar.finalName}</finalName>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
