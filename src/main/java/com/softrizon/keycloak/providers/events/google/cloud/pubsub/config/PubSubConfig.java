@@ -35,7 +35,7 @@ public class PubSubConfig {
         return adminOperationTypes;
     }
 
-    public Map<String, String> getMessageAttributes(AdminEvent event) {
+    public static Map<String, String> getMessageAttributes(AdminEvent event) {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("format", EVENT_FORMAT);
         // Event example: ADMIN.<REALM_ID>.<RESULT = SUCCESS | ERROR>.<RESOURCE_TYPE>.<OPERATION_TYPE>
@@ -49,7 +49,7 @@ public class PubSubConfig {
         return attributes;
     }
 
-    public Map<String, String> getMessageAttributes(Event event) {
+    public static Map<String, String> getMessageAttributes(Event event) {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("format", EVENT_FORMAT);
         // Event example: USER.<REALM_ID>.<RESULT = SUCCESS | ERROR>.<EVENT_TYPE>
@@ -101,7 +101,7 @@ public class PubSubConfig {
         return value;
     }
 
-    public static String normalizeEventName(CharSequence eventName) {
+    private static String normalizeEventName(CharSequence eventName) {
         if (eventName != null) {
             return SPACE.matcher(SPECIAL_CHARACTERS.matcher(eventName).replaceAll(""))
                     .replaceAll("_")
@@ -111,7 +111,7 @@ public class PubSubConfig {
         return null;
     }
 
-    public static String removeDots(String string) {
+    private static String removeDots(String string) {
         if (string != null) {
             return DOT.matcher(string)
                     .replaceAll("")

@@ -78,7 +78,7 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
         try {
             AdminEventMessage message = AdminEventMessage.create(adminEvent);
             String messageJsonString = objectMapper.writeValueAsString(message);
-            Map<String, String> attributes = config.getMessageAttributes(adminEvent);
+            Map<String, String> attributes = PubSubConfig.getMessageAttributes(adminEvent);
 
             publishMessage(messageJsonString, attributes);
         } catch (JsonProcessingException exception) {
@@ -99,7 +99,7 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
         try {
             UserEventMessage message = UserEventMessage.create(event);
             String messageJsonString = objectMapper.writeValueAsString(message);
-            Map<String, String> attributes = config.getMessageAttributes(event);
+            Map<String, String> attributes = PubSubConfig.getMessageAttributes(event);
 
             publishMessage(messageJsonString, attributes);
         } catch (JsonProcessingException exception) {
