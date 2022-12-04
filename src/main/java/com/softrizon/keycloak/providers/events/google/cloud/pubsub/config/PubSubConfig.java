@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 public class PubSubConfig {
 
+    public static final String PLUGIN_NAME = "event-listener-pubsub";
     public static final String EVENT_FORMAT = "JSON_API_V1";
 
     private static final Logger logger = Logger.getLogger(PubSubConfig.class);
@@ -67,7 +68,7 @@ public class PubSubConfig {
 
         // Process the topic id
         config.topicId = resolveConfigVariable(scope, "topicId", null);
-        Objects.requireNonNull(config.topicId, "event-listener-pubsub: the topic id is required.");
+        Objects.requireNonNull(config.topicId, String.format("%s: the topic id is required.", PLUGIN_NAME));
 
         // Process registered user events
         final String userEvents = resolveConfigVariable(scope, "userEventTypes", "REGISTER,DELETE_ACCOUNT,UPDATE_EMAIL");
@@ -81,7 +82,7 @@ public class PubSubConfig {
     }
 
     private static String resolveConfigVariable(Config.Scope scope, String variable, String defaultValue) {
-        Objects.requireNonNull(variable, "event-listener-pubsub: the variable name is required.");
+        Objects.requireNonNull(variable, String.format("%s: the variable name is required.", PLUGIN_NAME));
 
         String value = defaultValue;
 
@@ -96,7 +97,7 @@ public class PubSubConfig {
             }
         }
 
-        logger.infof("event-listener-pubsub: configuration: %s=%s.%n", variable, value);
+        logger.infof("%s: configuration: %s=%s.%n", PLUGIN_NAME, variable, value);
 
         return value;
     }

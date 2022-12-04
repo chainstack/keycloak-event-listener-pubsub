@@ -12,6 +12,8 @@ import org.keycloak.models.KeycloakSessionFactory;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import static com.softrizon.keycloak.providers.events.google.cloud.pubsub.config.PubSubConfig.PLUGIN_NAME;
+
 public class PubSubEventListenerProviderFactory implements EventListenerProviderFactory {
 
     private static final Logger logger = Logger.getLogger(PubSubEventListenerProviderFactory.class);
@@ -25,7 +27,7 @@ public class PubSubEventListenerProviderFactory implements EventListenerProvider
             if (publisher == null)
                 publisher = Publisher.newBuilder(config.getTopicId()).build();
         } catch (IOException exception) {
-            logger.warn("event-listener-pubsub: failed to create Pub/Sub publisher.");
+            logger.warnf("%s: failed to create Pub/Sub publisher.", PLUGIN_NAME);
             return null;
         }
 
@@ -50,12 +52,12 @@ public class PubSubEventListenerProviderFactory implements EventListenerProvider
                 publisher.awaitTermination(1, TimeUnit.MINUTES);
             }
         } catch (InterruptedException exception) {
-            logger.debugf(exception, "event-listener-pubsub: awaiting pub/sub publisher termination interrupted.");
+            logger.debugf(exception, "%s: awaiting pub/sub publisher termination interrupted.", PLUGIN_NAME);
         }
     }
 
     @Override
     public String getId() {
-        return "event-listener-pubsub";
+        return PLUGIN_NAME;
     }
 }

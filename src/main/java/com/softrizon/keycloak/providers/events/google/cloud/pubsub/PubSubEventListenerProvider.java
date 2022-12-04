@@ -28,6 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.softrizon.keycloak.providers.events.google.cloud.pubsub.config.PubSubConfig.PLUGIN_NAME;
+
 public class PubSubEventListenerProvider implements EventListenerProvider {
 
     private static final Logger logger = Logger.getLogger(PubSubEventListenerProvider.class);
@@ -38,9 +40,9 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
     private final ObjectMapper objectMapper;
 
     public PubSubEventListenerProvider(Publisher publisher, KeycloakSession session, PubSubConfig config) {
-        Objects.requireNonNull(publisher, "event-listener-pubsub: pub/pub publisher is required.");
-        Objects.requireNonNull(session, "event-listener-pubsub: a valid keycloak session is required.");
-        Objects.requireNonNull(config, "event-listener-pubsub: a valid config object is required.");
+        Objects.requireNonNull(publisher, String.format("%s: pub/pub publisher is required.", PLUGIN_NAME));
+        Objects.requireNonNull(session, String.format("%s: a valid keycloak session is required.", PLUGIN_NAME));
+        Objects.requireNonNull(config, String.format("%s: a valid config object is required.", PLUGIN_NAME));
 
         this.publisher = publisher;
         this.config = config;
@@ -68,7 +70,7 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
         // Ignore events that are not registered
         final String eventName = adminEvent.getOperationType().toString();
         if (!config.getAdminOperationTypes().contains(eventName)) {
-            logger.infof("event-listener-pubsub: ignored admin operation type '%s'.%n", eventName);
+            logger.infof("%s: ignored admin operation type '%s'.%n", PLUGIN_NAME, eventName);
             return;
         }
 
@@ -80,8 +82,8 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
 
             publishMessage(messageJsonString, attributes);
         } catch (JsonProcessingException exception) {
-            logger.warnf(exception, "event-listener-pubsub: failed to process JSON for admin event id '%s'.%n",
-                    adminEvent.getId());
+            logger.warnf(exception, "%s: failed to process JSON for admin event id '%s'.%n",
+                    PLUGIN_NAME, adminEvent.getId());
         }
     }
 
@@ -89,7 +91,7 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
         // Ignore events that are not registered
         final String eventName = event.getType().toString();
         if (!config.getUserEventTypes().contains(eventName)) {
-            logger.infof("event-listener-pubsub: ignored user event type '%s'.%n", eventName);
+            logger.infof("%s: ignored user event type '%s'.%n", PLUGIN_NAME, eventName);
             return;
         }
 
@@ -101,16 +103,16 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
 
             publishMessage(messageJsonString, attributes);
         } catch (JsonProcessingException exception) {
-            logger.warnf(exception, "event-listener-pubsub: failed to process JSON for client event id '%s'.%n",
-                    event.getId());
+            logger.warnf(exception, "%s: failed to process JSON for client event id '%s'.%n",
+                    PLUGIN_NAME, event.getId());
         }
     }
 
     private void publishMessage(String message, Map<String, String> attributes) {
         try {
             // Log message and attributes
-            logger.debugf("event-listener-pubsub: message body: %s.%n", message);
-            logger.debugf("event-listener-pubsub: message attributes: %s.%n", attributes.toString());
+            logger.debugf("%s: message body: %s.%n", PLUGIN_NAME, message);
+            logger.debugf("%s: message attributes: %s.%n", PLUGIN_NAME, attributes.toString());
 
             ByteString data = ByteString.copyFromUtf8(message);
             PubsubMessage pubsubMessage = PubsubMessage.newBuilder()
@@ -122,19 +124,19 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
 
                 // Handle message success
                 public void onSuccess(String messageId) {
-                    logger.infof("event-listener-pubsub: sent message id '%s' to pub/sub topic '%s' successfully.%n",
-                            messageId, config.getTopicId());
+                    logger.infof("%s: sent message id '%s' to pub/sub topic '%s' successfully.%n",
+                            PLUGIN_NAME, messageId, config.getTopicId());
                 }
 
                 // Handle message failure
                 public void onFailure(Throwable throwable) {
-                    logger.errorf(throwable, "event-listener-pubsub: failed to send message to pub/sub topic '%s'.%n",
-                            config.getTopicId());
+                    logger.errorf(throwable, "%s: failed to send message to pub/sub topic '%s'.%n",
+                            PLUGIN_NAME, config.getTopicId());
                 }
             }, MoreExecutors.directExecutor());
         } catch (Exception exception) {
-            logger.errorf(exception, "event-listener-pubsub: failed to send message to pub/sub topic '%s'.%n",
-                    config.getTopicId());
+            logger.errorf(exception, "%s: failed to send message to pub/sub topic '%s'.%n",
+                    PLUGIN_NAME, config.getTopicId());
         }
     }
 
