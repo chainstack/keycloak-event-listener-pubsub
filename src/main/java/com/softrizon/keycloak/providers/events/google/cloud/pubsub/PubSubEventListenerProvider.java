@@ -141,7 +141,7 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
     }
 
     private ObjectMapper createObjectMapper() {
-        final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZ'Z'");
+        final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.setDateFormat(dateFormat);

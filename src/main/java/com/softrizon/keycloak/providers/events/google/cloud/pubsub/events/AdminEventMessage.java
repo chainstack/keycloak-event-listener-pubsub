@@ -11,7 +11,7 @@ import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @XmlRootElement
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "_class")
 public class AdminEventMessage extends AdminEvent implements Serializable {
 
     private static final long serialVersionUID = -1L;

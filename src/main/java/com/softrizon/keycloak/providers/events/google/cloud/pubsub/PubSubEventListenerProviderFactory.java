@@ -27,7 +27,7 @@ public class PubSubEventListenerProviderFactory implements EventListenerProvider
             if (publisher == null)
                 publisher = Publisher.newBuilder(config.getTopicId()).build();
         } catch (IOException exception) {
-            logger.warnf("%s: failed to create Pub/Sub publisher.", PLUGIN_NAME);
+            logger.warnf(exception, "%s: failed to create Pub/Sub publisher.", PLUGIN_NAME);
             return null;
         }
 

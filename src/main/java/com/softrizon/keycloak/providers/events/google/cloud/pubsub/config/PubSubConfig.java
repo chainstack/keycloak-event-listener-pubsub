@@ -65,15 +65,15 @@ public class PubSubConfig {
         PubSubConfig config = new PubSubConfig();
 
         // Process the topic id
-        config.topicId = resolveConfigVariable(scope, "topicId", null);
+        config.topicId = resolveConfigVariable(scope, "topic_id", null);
         Objects.requireNonNull(config.topicId, String.format("%s: the topic id is required.", PLUGIN_NAME));
 
         // Process registered user events
-        final String userEvents = resolveConfigVariable(scope, "userEventTypes", "REGISTER,DELETE_ACCOUNT,UPDATE_EMAIL");
+        final String userEvents = resolveConfigVariable(scope, "user_event_types", "REGISTER,DELETE_ACCOUNT,UPDATE_EMAIL");
         config.userEventTypes.addAll(parseEventTypes(userEvents));
 
         // Process registered admin events
-        final String adminEvents = resolveConfigVariable(scope, "adminOperationTypes", "CREATE,DELETE,UPDATE");
+        final String adminEvents = resolveConfigVariable(scope, "admin_operation_types", "CREATE,DELETE,UPDATE");
         config.adminOperationTypes.addAll(parseEventTypes(adminEvents));
 
         return config;
@@ -88,7 +88,7 @@ public class PubSubConfig {
         if (scope != null && scope.get(variable) != null) {
             value = scope.get(variable);
         } else { // Try to retrieve the value for this variable from environment variables. Eg: SN_KC_PUBSUB_TOPIC_ID.
-            String envVariable = String.format(Locale.US, "SN_KC_PUBSUB_%s%n", variable.toUpperCase(Locale.US));
+            String envVariable = String.format(Locale.US, "SN_KC_PUBSUB_%s", variable.toUpperCase(Locale.US));
             String tmpValue = System.getenv(envVariable);
             if (tmpValue != null) {
                 value = tmpValue;
