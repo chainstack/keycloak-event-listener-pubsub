@@ -55,7 +55,7 @@ public class PubSubConfig {
         attributes.put("resourceType", event.getResourceTypeAsString());
         attributes.put("operationType", event.getOperationType().toString());
         attributes.put("result", processResult(event.getError()));
-        attributes.put("eventName", createEventName(event));
+        attributes.put("event", createEventName(event));
 
         return attributes;
     }
@@ -68,7 +68,7 @@ public class PubSubConfig {
         attributes.put("clientId", event.getClientId());
         attributes.put("eventType", event.getType().toString());
         attributes.put("result", processResult(event.getError()));
-        attributes.put("eventName", createEventName(event));
+        attributes.put("event", createEventName(event));
 
         return attributes;
     }

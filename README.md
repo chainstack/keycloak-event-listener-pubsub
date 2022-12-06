@@ -20,7 +20,7 @@ clientId=test-app
 resourceType=USER
 operationType=UPDATE
 eventType=REGISTER
-pattern =
+event =
     USER:<REALM_ID>:<RESULT = SUCCESS | ERROR>:<CLIENT_ID>:<EVENT_TYPE>
     ADMIN:<REALM_ID>:<RESULT = SUCCESS | ERROR>:<RESOURCE_TYPE>:<OPERATION_TYPE>
 
