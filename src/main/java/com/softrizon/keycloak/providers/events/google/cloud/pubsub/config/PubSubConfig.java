@@ -35,7 +35,7 @@ public class PubSubConfig {
     public static String createEventName(AdminEvent event) {
         // Event example: ADMIN:<REALM_ID>:<RESULT = SUCCESS | ERROR>:<RESOURCE_TYPE>:<OPERATION_TYPE>
         return String.format(Locale.US, "ADMIN:%s:%s:%s:%s",
-                event.getRealmId(), (event.getError() == null ? "SUCCESS" : "ERROR"), event.getResourceTypeAsString(),
+                event.getRealmId(), processResult(event.getError()), event.getResourceTypeAsString(),
                 event.getOperationType().toString());
 
     }
@@ -43,7 +43,7 @@ public class PubSubConfig {
     public static String createEventName(Event event) {
         // Event example: USER:<REALM_ID>:<RESULT = SUCCESS | ERROR>:<CLIENT_ID>:<EVENT_TYPE>
         return String.format(Locale.US, "USER:%s:%s:%s:%s",
-                event.getRealmId(), (event.getError() == null ? "SUCCESS" : "ERROR"), event.getClientId(),
+                event.getRealmId(), processResult(event.getError()), event.getClientId(),
                 event.getType().toString());
     }
 
@@ -54,7 +54,7 @@ public class PubSubConfig {
         attributes.put("realmId", event.getRealmId());
         attributes.put("resourceType", event.getResourceTypeAsString());
         attributes.put("operationType", event.getOperationType().toString());
-        attributes.put("result", (event.getError() == null ? "SUCCESS" : "ERROR"));
+        attributes.put("result", processResult(event.getError()));
         attributes.put("eventName", createEventName(event));
 
         return attributes;
@@ -67,7 +67,7 @@ public class PubSubConfig {
         attributes.put("realmId", event.getRealmId());
         attributes.put("clientId", event.getClientId());
         attributes.put("eventType", event.getType().toString());
-        attributes.put("result", (event.getError() == null ? "SUCCESS" : "ERROR"));
+        attributes.put("result", processResult(event.getError()));
         attributes.put("eventName", createEventName(event));
 
         return attributes;
@@ -123,5 +123,9 @@ public class PubSubConfig {
         return Arrays.stream(events.split(","))
                 .map(item -> item.trim().toUpperCase(Locale.US))
                 .collect(Collectors.toList());
+    }
+
+    private static String processResult(String error) {
+        return error == null ? "SUCCESS" : "ERROR";
     }
 }

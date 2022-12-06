@@ -77,7 +77,7 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
                 .filter(e -> e.pattern.matcher(eventName.toUpperCase(Locale.US)).matches())
                 .findFirst();
         if (!optionalEvent.isPresent()) {
-            logger.infof("%s: ignored admin operation type '%s'.%n", PLUGIN_NAME, eventName);
+            logger.infof("%s: ignored admin event '%s'.%n", PLUGIN_NAME, eventName);
             return;
         }
 
@@ -101,7 +101,7 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
                 .filter(e -> e.pattern.matcher(eventName.toUpperCase(Locale.US)).matches())
                 .findFirst();
         if (!optionalEvent.isPresent()) {
-            logger.infof("%s: ignored user event type '%s'.%n", PLUGIN_NAME, eventName);
+            logger.infof("%s: ignored user event '%s'.%n", PLUGIN_NAME, eventName);
             return;
         }
 
@@ -121,8 +121,8 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
     private void publishMessage(String message, Map<String, String> attributes) {
         try {
             // Log message and attributes
-            logger.debugf("%s: message body: %s.%n", PLUGIN_NAME, message);
-            logger.debugf("%s: message attributes: %s.%n", PLUGIN_NAME, attributes.toString());
+            logger.infof("%s: message body: %s.", PLUGIN_NAME, message);
+            logger.infof("%s: message attributes: %s.", PLUGIN_NAME, attributes.toString());
 
             ByteString data = ByteString.copyFromUtf8(message);
             PubsubMessage pubsubMessage = PubsubMessage.newBuilder()

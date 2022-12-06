@@ -16,7 +16,7 @@ import static com.softrizon.keycloak.providers.events.google.cloud.pubsub.config
 public class EventPatternParser {
 
     private final Pattern REALM_ID_PATTERN = Pattern.compile(".*");
-    private final Pattern CLIENT_ID_PATTERN = Pattern.compile("[0-9a-fA-F-]{36}");
+    private final Pattern CLIENT_ID_PATTERN = Pattern.compile(".*");
     private final Pattern RESULT_PATTERN = Pattern.compile("(?:SUCCESS|ERROR)");
     private final Pattern ENUM_TYPE_PATTERN = Pattern.compile("[0-9a-zA-Z_]+");
     private final Pattern SEMI_COLON_PATTERN = Pattern.compile(":");
