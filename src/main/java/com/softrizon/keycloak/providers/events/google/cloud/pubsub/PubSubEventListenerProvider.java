@@ -26,6 +26,7 @@ import org.keycloak.models.KeycloakSession;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -73,7 +74,7 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
         // Ignore events that are not registered
         final String eventName = createEventName(adminEvent);
         final Optional<EventPattern> optionalEvent = config.getAdminEventTypes().stream()
-                .filter(e -> e.pattern.matcher(eventName).matches())
+                .filter(e -> e.pattern.matcher(eventName.toUpperCase(Locale.US)).matches())
                 .findFirst();
         if (optionalEvent.isEmpty()) {
             logger.infof("%s: ignored admin operation type '%s'.%n", PLUGIN_NAME, eventName);
@@ -97,7 +98,7 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
         // Ignore events that are not registered
         final String eventName = createEventName(event);
         final Optional<EventPattern> optionalEvent = config.getUserEventTypes().stream()
-                .filter(e -> e.pattern.matcher(eventName).matches())
+                .filter(e -> e.pattern.matcher(eventName.toUpperCase(Locale.US)).matches())
                 .findFirst();
         if (optionalEvent.isEmpty()) {
             logger.infof("%s: ignored user event type '%s'.%n", PLUGIN_NAME, eventName);

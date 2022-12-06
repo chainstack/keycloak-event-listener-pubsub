@@ -82,14 +82,14 @@ public class PubSubConfig {
         Objects.requireNonNull(config.topicId, String.format("%s: the topic id is required.", PLUGIN_NAME));
 
         // Process registered user events
-        final String userEvents = resolveConfigVariable(scope, "user_event_patterns", "USER:*:*:*:REGISTER");
+        final String userEvents = resolveConfigVariable(scope, "user_event_patterns", "USER:*:*:*:*");
         final EventPattern[] userEventPatterns = parseEventTypes(userEvents).stream()
                 .map(event -> parser.parse(format, event))
                 .toArray(EventPattern[]::new);
         config.userEventTypes.addAll(Arrays.asList(userEventPatterns));
 
         // Process registered admin events
-        final String adminEvents = resolveConfigVariable(scope, "admin_event_patterns", "ADMIN:*:*:*:UPDATE");
+        final String adminEvents = resolveConfigVariable(scope, "admin_event_patterns", "ADMIN:*:*:*:*");
         final EventPattern[] adminEventPatterns = parseEventTypes(adminEvents).stream()
                 .map(event -> parser.parse(format, event))
                 .toArray(EventPattern[]::new);
