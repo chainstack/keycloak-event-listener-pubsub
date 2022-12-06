@@ -12,12 +12,15 @@
     <name>Keycloak: Event Publisher to Google Cloud Pub/Sub</name>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <version.compiler.maven.plugin>3.1</version.compiler.maven.plugin>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <keycloak.version>19.0.3</keycloak.version>
         <google-cloud-pubsub.version>1.121.1</google-cloud-pubsub.version>
         <jar.finalName>${project.artifactId}-${project.version}</jar.finalName>
+        <wildfly.skip>false</wildfly.skip>
+        <keycloak.management.port>10090</keycloak.management.port>
     </properties>
 
     <dependencies>
@@ -59,13 +62,15 @@
 
     <build>
         <finalName>event-listener-pubsub-${project.version}</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${version.compiler.maven.plugin}</version>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
 
@@ -74,6 +79,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
+                    <!-- get all project dependencies -->
                     <finalName>${jar.finalName}</finalName>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -83,12 +89,24 @@
                 <executions>
                     <execution>
                         <id>make-assembly</id>
+                        <!-- bind to the packaging phase -->
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>4.0.0.Final</version>
+                <configuration>
+                    <skip>${wildfly.skip}</skip>
+                    <filename>${project.build.finalName}.jar</filename>
+                    <port>${keycloak.management.port}</port>
+                </configuration>
             </plugin>
         </plugins>
     </build>

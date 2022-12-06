@@ -1,6 +1,5 @@
 package com.softrizon.keycloak.providers.events.google.cloud.pubsub.events;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.keycloak.events.Event;
@@ -22,14 +21,8 @@ public class UserEventMessage extends Event implements Serializable {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    protected void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
-    }
-
-    @JsonIgnore
-    @Override
-    public long getTime() {
-        return super.getTime();
     }
 
     public static UserEventMessage create(Event event) {

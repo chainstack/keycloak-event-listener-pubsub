@@ -76,7 +76,7 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
         final Optional<EventPattern> optionalEvent = config.getAdminEventTypes().stream()
                 .filter(e -> e.pattern.matcher(eventName.toUpperCase(Locale.US)).matches())
                 .findFirst();
-        if (optionalEvent.isEmpty()) {
+        if (!optionalEvent.isPresent()) {
             logger.infof("%s: ignored admin operation type '%s'.%n", PLUGIN_NAME, eventName);
             return;
         }
@@ -100,7 +100,7 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
         final Optional<EventPattern> optionalEvent = config.getUserEventTypes().stream()
                 .filter(e -> e.pattern.matcher(eventName.toUpperCase(Locale.US)).matches())
                 .findFirst();
-        if (optionalEvent.isEmpty()) {
+        if (!optionalEvent.isPresent()) {
             logger.infof("%s: ignored user event type '%s'.%n", PLUGIN_NAME, eventName);
             return;
         }
@@ -130,7 +130,7 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
                     .setData(data)
                     .build();
             ApiFuture<String> messageIdFuture = publisher.publish(pubsubMessage);
-            ApiFutures.addCallback(messageIdFuture, new ApiFutureCallback<>() {
+            ApiFutures.addCallback(messageIdFuture, new ApiFutureCallback<String>() {
 
                 // Handle message success
                 public void onSuccess(String messageId) {
