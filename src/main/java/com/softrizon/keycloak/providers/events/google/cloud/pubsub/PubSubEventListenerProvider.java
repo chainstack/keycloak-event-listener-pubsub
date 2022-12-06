@@ -15,6 +15,7 @@ import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
 import com.softrizon.keycloak.providers.events.google.cloud.pubsub.config.PubSubConfig;
 import com.softrizon.keycloak.providers.events.google.cloud.pubsub.events.AdminEventMessage;
+import com.softrizon.keycloak.providers.events.google.cloud.pubsub.events.EventPattern;
 import com.softrizon.keycloak.providers.events.google.cloud.pubsub.events.UserEventMessage;
 import org.jboss.logging.Logger;
 import org.keycloak.events.Event;
@@ -27,8 +28,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.softrizon.keycloak.providers.events.google.cloud.pubsub.config.PubSubConfig.PLUGIN_NAME;
+import static com.softrizon.keycloak.providers.events.google.cloud.pubsub.config.PubSubConfig.createEventName;
 
 public class PubSubEventListenerProvider implements EventListenerProvider {
 
@@ -68,8 +71,11 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
 
     private void publishAdminEvent(AdminEvent adminEvent, boolean includeRepresentation) {
         // Ignore events that are not registered
-        final String eventName = adminEvent.getOperationType().toString();
-        if (!config.getAdminOperationTypes().contains(eventName)) {
+        final String eventName = createEventName(adminEvent);
+        final Optional<EventPattern> optionalEvent = config.getAdminEventTypes().stream()
+                .filter(e -> e.pattern.matcher(eventName).matches())
+                .findFirst();
+        if (optionalEvent.isEmpty()) {
             logger.infof("%s: ignored admin operation type '%s'.%n", PLUGIN_NAME, eventName);
             return;
         }
@@ -89,8 +95,11 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
 
     private void publishEvent(Event event) {
         // Ignore events that are not registered
-        final String eventName = event.getType().toString();
-        if (!config.getUserEventTypes().contains(eventName)) {
+        final String eventName = createEventName(event);
+        final Optional<EventPattern> optionalEvent = config.getUserEventTypes().stream()
+                .filter(e -> e.pattern.matcher(eventName).matches())
+                .findFirst();
+        if (optionalEvent.isEmpty()) {
             logger.infof("%s: ignored user event type '%s'.%n", PLUGIN_NAME, eventName);
             return;
         }
