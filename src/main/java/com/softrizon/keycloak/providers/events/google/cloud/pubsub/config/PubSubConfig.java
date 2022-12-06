@@ -17,18 +17,18 @@ public class PubSubConfig {
     private static final EventPatternParser parser = new EventPatternParser();
 
     private String topicId;
-    private final List<EventPattern> userEventTypes = new ArrayList<>();
-    private final List<EventPattern> adminEventTypes = new ArrayList<>();
+    private final Set<EventPattern> userEventTypes = new HashSet<>();
+    private final Set<EventPattern> adminEventTypes = new HashSet<>();
 
     public String getTopicId() {
         return topicId;
     }
 
-    public List<EventPattern> getUserEventTypes() {
+    public Set<EventPattern> getUserEventTypes() {
         return userEventTypes;
     }
 
-    public List<EventPattern> getAdminEventTypes() {
+    public Set<EventPattern> getAdminEventTypes() {
         return adminEventTypes;
     }
 

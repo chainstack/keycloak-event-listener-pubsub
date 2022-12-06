@@ -18,12 +18,12 @@ public class EventPattern {
         if (this == o) return true;
         if (!(o instanceof EventPattern)) return false;
         EventPattern that = (EventPattern) o;
-        return format == that.format && pattern.equals(that.pattern);
+        return format == that.format && pattern.pattern().equals(that.pattern.pattern());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(format, pattern);
+        return Objects.hash(format, pattern.pattern());
     }
 
     @Override
