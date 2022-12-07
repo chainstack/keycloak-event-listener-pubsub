@@ -3,10 +3,11 @@
 Configuration
 
 Environment variables
-GOOGLE_APPLICATION_CREDENTIALS=/path/to/google/service_account_key_file
-SN_KC_PUBSUB_TOPIC_ID=topic_id
-SN_KC_PUBSUB_USER_EVENT_TYPES=USER:*:*:*:*,USER:*:*:*:REGISTER,USER:*:*:*:UPDATE_EMAIL
-SN_KC_PUBSUB_ADMIN_EVENT_TYPES=ADMIN:*:*:*:*
+SN_KC_PUBSUB_SERVICE_ACCOUNT_CREDENTIALS_FILE_PATH=/path/to/google/service_account_key_file
+SN_KC_PUBSUB_PROJECT_ID=<your_project_id>
+SN_KC_PUBSUB_TOPIC_ID=<your_topic_id>
+SN_KC_PUBSUB_USER_EVENT_PATTERNS=USER:*:*:*:*,USER:*:*:*:REGISTER,USER:*:*:*:UPDATE_EMAIL
+SN_KC_PUBSUB_ADMIN_EVENT_PATTERNS=ADMIN:*:*:*:*
 
 
 Event representation published to pub/sub 
