@@ -84,8 +84,7 @@ subscription. [See how to filter messages from a subscription](https://cloud.goo
 | resourceType | USER | One of the possible value of the resource type enum. Link above. |
 | operationType | UPDATE | One of the possible value of the operation type enum. Link above. |
 | eventType | REGISTER | One of the possible value of the event type enum. Link above. |
-| event | USER:super-app-realm:SUCCESS:android-app:REGISTER | A fully qualify event name to use in your subscription
-filters. |
+| event | USER:super-app-realm:SUCCESS:android-app:REGISTER | A fully qualify event name to use in your subscription filters. |
 
 #### Message body
 
@@ -112,18 +111,6 @@ filters. |
   "createdAt": "2022-12-07T01:02:36Z"
 }
 ```
-
-format = JSON_API_V1
-who=ADMIN | USER
-realmId = master
-result= SUCCESS | ERROR
-clientId=test-app
-resourceType=USER
-operationType=UPDATE
-eventType=REGISTER
-event =
-USER:<REALM_ID>:<RESULT = SUCCESS | ERROR>:<CLIENT_ID>:<EVENT_TYPE>
-ADMIN:<REALM_ID>:<RESULT = SUCCESS | ERROR>:<RESOURCE_TYPE>:<OPERATION_TYPE>
 
 # Build
 
