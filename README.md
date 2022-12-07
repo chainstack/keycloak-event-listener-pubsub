@@ -112,9 +112,9 @@ subscription. [See how to filter messages from a subscription](https://cloud.goo
 }
 ```
 
-# Build
+## Build
 
-## From source
+### From source
 
 Execute the command below to build and install this package locally. Post installation,
 continue with steps 3 and 4 below.
@@ -123,7 +123,7 @@ continue with steps 3 and 4 below.
 mvn clean install
 ```
 
-## Download the pre-build package
+### Download the pre-build package
 
 1. [Download the latest jar file](https://github.com/softrizon/keycloak-event-listener-google-cloud-pubsub/blob/target/event-listener-pubsub-1.0.0.jar?raw=true)
 2. Copy the jar file into your bitnami Keycloak
