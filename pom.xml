@@ -14,10 +14,12 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <version.compiler.maven.plugin>3.1</version.compiler.maven.plugin>
+        <version.compiler.maven.plugin>3.8.1</version.compiler.maven.plugin>
+        <version.shade.maven.plugin>3.4.1</version.shade.maven.plugin>
+        <version.wildfly.maven.plugin>4.0.0.Final</version.wildfly.maven.plugin>
+        <version.keycloak>19.0.3</version.keycloak>
+        <version.google-cloud-pubsub>1.121.1</version.google-cloud-pubsub>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <keycloak.version>19.0.3</keycloak.version>
-        <google-cloud-pubsub.version>1.121.1</google-cloud-pubsub.version>
         <jar.finalName>${project.artifactId}-${project.version}</jar.finalName>
         <wildfly.skip>false</wildfly.skip>
         <keycloak.management.port>10090</keycloak.management.port>
@@ -28,35 +30,35 @@
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-core</artifactId>
             <scope>provided</scope>
-            <version>${keycloak.version}</version>
+            <version>${version.keycloak}</version>
         </dependency>
 
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-server-spi</artifactId>
             <scope>provided</scope>
-            <version>${keycloak.version}</version>
+            <version>${version.keycloak}</version>
         </dependency>
 
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-server-spi-private</artifactId>
             <scope>provided</scope>
-            <version>${keycloak.version}</version>
+            <version>${version.keycloak}</version>
         </dependency>
 
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-services</artifactId>
             <scope>provided</scope>
-            <version>${keycloak.version}</version>
+            <version>${version.keycloak}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.google.cloud/google-cloud-pubsub -->
         <dependency>
             <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-pubsub</artifactId>
-            <version>${google-cloud-pubsub.version}</version>
+            <version>${version.google-cloud-pubsub}</version>
         </dependency>
     </dependencies>
 
@@ -74,26 +76,110 @@
                 </configuration>
             </plugin>
 
-            <!-- Maven Assembly Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <!-- get all project dependencies -->
-                    <finalName>${jar.finalName}</finalName>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <appendAssemblyId>false</appendAssemblyId>
-                </configuration>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>${version.shade.maven.plugin}</version>
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
-                        <!-- bind to the packaging phase -->
-                        <phase>package</phase>
+                        <id>create-shaded-jar</id>
                         <goals>
-                            <goal>single</goal>
+                            <goal>shade</goal>
                         </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <createSourcesJar>false</createSourcesJar>
+                            <shadeSourcesContent>false</shadeSourcesContent>
+                            <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <artifactSet>
+                                <includes>
+                                    <!-- Google Dependencies -->
+                                    <include>com.google.cloud:google-cloud-pubsub</include>
+
+                                    <include>com.google.api:api-common</include>
+                                    <include>com.google.api:gax-httpjson</include>
+                                    <include>com.google.api:gax</include>
+                                    <include>com.google.api:gax-grpc</include>
+
+                                    <include>com.google.api.grpc:proto-google-common-protos</include>
+                                    <include>com.google.api.grpc:proto-google-cloud-pubsub-v1</include>
+                                    <include>com.google.api.grpc:proto-google-iam-v1</include>
+
+                                    <include>com.google.auth:google-auth-library-oauth2-http</include>
+                                    <include>com.google.auth:google-auth-library-credentials</include>
+
+                                    <include>com.google.guava:guava</include>
+                                    <include>com.google.guava:failureaccess</include>
+                                    <include>com.google.guava:listenablefuture</include>
+
+                                    <include>io.grpc:grpc-api</include>
+                                    <include>io.grpc:grpc-context</include>
+                                    <include>io.grpc:grpc-stub</include>
+                                    <include>io.grpc:grpc-protobuf</include>
+                                    <include>io.grpc:grpc-protobuf-lite</include>
+                                    <include>io.grpc:grpc-alts</include>
+                                    <include>io.grpc:grpc-grpclb</include>
+                                    <include>io.grpc:grpc-auth</include>
+                                    <include>io.grpc:grpc-netty-shaded</include>
+                                    <include>io.grpc:grpc-googleapis</include>
+                                    <include>io.grpc:grpc-xds</include>
+                                    <include>io.grpc:grpc-services</include>
+                                    <include>io.grpc:grpc-core</include>
+
+                                    <include>io.opencensus:opencensus-proto</include>
+                                    <include>io.opencensus:opencensus-api</include>
+                                    <include>io.opencensus:opencensus-contrib-http-util</include>
+
+                                    <include>com.google.protobuf:protobuf-java</include>
+                                    <include>com.google.protobuf:protobuf-java-util</include>
+
+                                    <include>com.google.http-client:google-http-client-gson</include>
+                                    <include>com.google.http-client:google-http-client</include>
+
+                                    <include>com.google.j2objc:j2objc-annotations</include>
+                                    <include>com.google.re2j:re2j</include>
+                                    <include>com.google.code.gson:gson</include>
+                                    <include>com.google.code.findbugs:jsr305</include>
+                                    <include>com.google.android:annotations</include>
+                                    <include>com.google.errorprone:error_prone_annotations</include>
+                                    <include>com.google.auto.value:auto-value-annotations</include>
+
+                                    <!-- All others -->
+                                    <include>org.apache.httpcomponents:httpclient</include>
+                                    <include>org.apache.httpcomponents:httpcore</include>
+
+                                    <include>org.threeten:threetenbp</include>
+                                    <include>org.codehaus.mojo:animal-sniffer-annotations</include>
+                                    <include>io.perfmark:perfmark-api</include>
+                                    <include>commons-logging:commons-logging</include>
+                                    <include>commons-codec:commons-codec</include>
+                                    <include>javax.annotation:javax.annotation-api</include>
+                                    <include>org.checkerframework:checker-qual</include>
+                                    <include>org.conscrypt:conscrypt-openjdk-uber</include>
+                                </includes>
+                            </artifactSet>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                        <exclude>META-INF/DEPENDENCIES</exclude>
+                                        <exclude>META-INF/LICENSE</exclude>
+                                        <exclude>META-INF/LICENSE.txt</exclude>
+                                        <exclude>META-INF/NOTICE</exclude>
+                                        <exclude>META-INF/NOTICE.txt</exclude>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -101,7 +187,7 @@
             <plugin>
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-maven-plugin</artifactId>
-                <version>4.0.0.Final</version>
+                <version>${version.wildfly.maven.plugin}</version>
                 <configuration>
                     <skip>${wildfly.skip}</skip>
                     <filename>${project.build.finalName}.jar</filename>
