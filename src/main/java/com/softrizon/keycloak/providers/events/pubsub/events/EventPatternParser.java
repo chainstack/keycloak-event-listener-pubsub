@@ -1,4 +1,4 @@
-package com.softrizon.keycloak.providers.events.google.cloud.pubsub.events;
+package com.softrizon.keycloak.providers.events.pubsub.events;
 
 import org.keycloak.events.EventType;
 import org.keycloak.events.admin.OperationType;
@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.softrizon.keycloak.providers.events.google.cloud.pubsub.config.PubSubConfig.PLUGIN_NAME;
+import static com.softrizon.keycloak.providers.events.pubsub.config.PubSubConfig.PLUGIN_NAME;
 
 public class EventPatternParser {
 

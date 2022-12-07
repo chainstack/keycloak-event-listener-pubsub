@@ -1,4 +1,4 @@
-package com.softrizon.keycloak.providers.events.google.cloud.pubsub.events;
+package com.softrizon.keycloak.providers.events.pubsub.events;
 
 import java.util.Objects;
 import java.util.regex.Pattern;

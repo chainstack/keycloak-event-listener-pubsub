@@ -1,7 +1,7 @@
-package com.softrizon.keycloak.providers.events.google.cloud.pubsub.config;
+package com.softrizon.keycloak.providers.events.pubsub.config;
 
-import com.softrizon.keycloak.providers.events.google.cloud.pubsub.events.EventPattern;
-import com.softrizon.keycloak.providers.events.google.cloud.pubsub.events.EventPatternParser;
+import com.softrizon.keycloak.providers.events.pubsub.events.EventPattern;
+import com.softrizon.keycloak.providers.events.pubsub.events.EventPatternParser;
 import org.jboss.logging.Logger;
 import org.keycloak.Config;
 import org.keycloak.events.Event;
@@ -53,7 +53,8 @@ public class PubSubConfig {
     public static String createEventName(Event event) {
         // Event example: USER:<REALM_ID>:<RESULT>:<CLIENT_ID>:<EVENT_TYPE>
         return String.format(Locale.US, "USER:%s:%s:%s:%s",
-                event.getRealmId(), processResult(event.getError()), event.getClientId(),
+                event.getRealmId(), processResult(event.getError()),
+                event.getClientId() != null ? event.getClientId() : "",
                 event.getType().toString());
     }
 
@@ -89,27 +90,27 @@ public class PubSubConfig {
 
         // Process the service account google credentials
         config.serviceAccountCredentialsFilePath = resolveConfigVariable(scope,
-                "SERVICE_ACCOUNT_CREDENTIALS_FILE_PATH", null);
+                "pubsub_service_account_credentials_file_path", null);
         Objects.requireNonNull(config.serviceAccountCredentialsFilePath,
                 String.format("%s: the pubsub service account credentials file path is required.", PLUGIN_NAME));
 
         // Process the project id
-        config.projectId = resolveConfigVariable(scope, "project_id", null);
+        config.projectId = resolveConfigVariable(scope, "pubsub_project_id", null);
         Objects.requireNonNull(config.projectId, String.format("%s: the project id is required.", PLUGIN_NAME));
 
         // Process the topic id
-        config.topicId = resolveConfigVariable(scope, "topic_id", null);
+        config.topicId = resolveConfigVariable(scope, "pubsub_topic_id", null);
         Objects.requireNonNull(config.topicId, String.format("%s: the topic id is required.", PLUGIN_NAME));
 
         // Process registered user events
-        final String userEvents = resolveConfigVariable(scope, "user_event_patterns", "USER:*:*:*:*");
+        final String userEvents = resolveConfigVariable(scope, "keycloak_user_event_patterns", "USER:*:*:*:*");
         final EventPattern[] userEventPatterns = parseEventTypes(userEvents).stream()
                 .map(event -> parser.parse(format, event))
                 .toArray(EventPattern[]::new);
         if (userEventPatterns.length > 0) config.userEventTypes.addAll(Arrays.asList(userEventPatterns));
 
         // Process registered admin events
-        final String adminEvents = resolveConfigVariable(scope, "admin_event_patterns", "ADMIN:*:*:*:*");
+        final String adminEvents = resolveConfigVariable(scope, "keycloak_admin_event_patterns", "ADMIN:*:*:*:*");
         final EventPattern[] adminEventPatterns = parseEventTypes(adminEvents).stream()
                 .map(event -> parser.parse(format, event))
                 .toArray(EventPattern[]::new);
@@ -131,19 +132,20 @@ public class PubSubConfig {
         Objects.requireNonNull(variable, String.format("%s: the variable name is required.", PLUGIN_NAME));
 
         String value = defaultValue;
+        String newVariable = variable;
 
         // Extract the value for this variable
         if (scope != null && scope.get(variable) != null) {
             value = scope.get(variable);
         } else { // Try to retrieve the value for this variable from environment variables. Eg: SN_KC_PUBSUB_TOPIC_ID.
-            String envVariable = String.format(Locale.US, "SN_KC_PUBSUB_%s", variable.toUpperCase(Locale.US));
-            String tmpValue = System.getenv(envVariable);
+            newVariable = String.format(Locale.US, "SN_%s", variable.toUpperCase(Locale.US));
+            String tmpValue = System.getenv(newVariable);
             if (tmpValue != null) {
                 value = tmpValue;
             }
         }
 
-        logger.infof("%s: configuration: %s=%s", PLUGIN_NAME, variable, value);
+        logger.infof("%s: configuration: %s=%s", PLUGIN_NAME, newVariable, value);
 
         return value;
     }

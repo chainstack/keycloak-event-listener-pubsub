@@ -1,4 +1,4 @@
-package com.softrizon.keycloak.providers.events.google.cloud.pubsub.events;
+package com.softrizon.keycloak.providers.events.pubsub.events;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

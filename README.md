@@ -5,7 +5,7 @@ and publishes them to a Google Cloud Pub/Sub topic. It has been deployed on Keyc
 on a Kubernetes cluster. We did some simple tests on Keycloak 18.0.2, so if you run into issues,
 we welcome your pull requests :).
 
-# Configuration
+## Configuration
 
 Add the following variables to your environment.
 

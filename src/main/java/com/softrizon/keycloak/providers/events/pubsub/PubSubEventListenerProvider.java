@@ -1,4 +1,4 @@
-package com.softrizon.keycloak.providers.events.google.cloud.pubsub;
+package com.softrizon.keycloak.providers.events.pubsub;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
@@ -13,10 +13,10 @@ import com.google.cloud.pubsub.v1.Publisher;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
-import com.softrizon.keycloak.providers.events.google.cloud.pubsub.config.PubSubConfig;
-import com.softrizon.keycloak.providers.events.google.cloud.pubsub.events.AdminEventMessage;
-import com.softrizon.keycloak.providers.events.google.cloud.pubsub.events.EventPattern;
-import com.softrizon.keycloak.providers.events.google.cloud.pubsub.events.UserEventMessage;
+import com.softrizon.keycloak.providers.events.pubsub.config.PubSubConfig;
+import com.softrizon.keycloak.providers.events.pubsub.events.AdminEventMessage;
+import com.softrizon.keycloak.providers.events.pubsub.events.EventPattern;
+import com.softrizon.keycloak.providers.events.pubsub.events.UserEventMessage;
 import org.jboss.logging.Logger;
 import org.keycloak.events.Event;
 import org.keycloak.events.EventListenerProvider;
@@ -31,8 +31,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.softrizon.keycloak.providers.events.google.cloud.pubsub.config.PubSubConfig.PLUGIN_NAME;
-import static com.softrizon.keycloak.providers.events.google.cloud.pubsub.config.PubSubConfig.createEventName;
+import static com.softrizon.keycloak.providers.events.pubsub.config.PubSubConfig.PLUGIN_NAME;
+import static com.softrizon.keycloak.providers.events.pubsub.config.PubSubConfig.createEventName;
 
 public class PubSubEventListenerProvider implements EventListenerProvider {
 

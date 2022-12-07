@@ -1,10 +1,10 @@
-package com.softrizon.keycloak.providers.events.google.cloud.pubsub;
+package com.softrizon.keycloak.providers.events.pubsub;
 
 import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.pubsub.v1.TopicName;
-import com.softrizon.keycloak.providers.events.google.cloud.pubsub.config.PubSubConfig;
+import com.softrizon.keycloak.providers.events.pubsub.config.PubSubConfig;
 import org.jboss.logging.Logger;
 import org.keycloak.Config;
 import org.keycloak.events.EventListenerProvider;
@@ -17,7 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
-import static com.softrizon.keycloak.providers.events.google.cloud.pubsub.config.PubSubConfig.PLUGIN_NAME;
+import static com.softrizon.keycloak.providers.events.pubsub.config.PubSubConfig.PLUGIN_NAME;
 
 public class PubSubEventListenerProviderFactory implements EventListenerProviderFactory {
 
