@@ -1,6 +1,9 @@
 package com.softrizon.keycloak.providers.events.google.cloud.pubsub;
 
+import com.google.api.gax.core.FixedCredentialsProvider;
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.pubsub.v1.Publisher;
+import com.google.pubsub.v1.TopicName;
 import com.softrizon.keycloak.providers.events.google.cloud.pubsub.config.PubSubConfig;
 import org.jboss.logging.Logger;
 import org.keycloak.Config;
@@ -10,6 +13,8 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
 import static com.softrizon.keycloak.providers.events.google.cloud.pubsub.config.PubSubConfig.PLUGIN_NAME;
@@ -18,14 +23,18 @@ public class PubSubEventListenerProviderFactory implements EventListenerProvider
 
     private static final Logger logger = Logger.getLogger(PubSubEventListenerProviderFactory.class);
 
+    private GoogleCredentials credentials;
     private PubSubConfig config;
     private Publisher publisher;
 
     @Override
     public synchronized EventListenerProvider create(KeycloakSession keycloakSession) {
         try {
-            if (publisher == null)
-                publisher = Publisher.newBuilder(config.getTopicId()).build();
+            if (publisher == null) {
+                publisher = Publisher.newBuilder(TopicName.of(config.getProjectId(), config.getTopicId()))
+                        .setCredentialsProvider(FixedCredentialsProvider.create(credentials))
+                        .build();
+            }
         } catch (IOException exception) {
             logger.warnf(exception, "%s: failed to create Pub/Sub publisher.", PLUGIN_NAME);
             return null;
@@ -36,7 +45,13 @@ public class PubSubEventListenerProviderFactory implements EventListenerProvider
 
     @Override
     public void init(Config.Scope scope) {
-        config = PubSubConfig.create(scope);
+        try {
+            config = PubSubConfig.create(scope);
+            credentials = GoogleCredentials.fromStream(Files.newInputStream(Paths.get(
+                    config.getServiceAccountCredentialsFilePath())));
+        } catch (IOException exception) {
+            logger.errorf(exception, "%s: service account file for pub sub could not be found.", PLUGIN_NAME);
+        }
     }
 
     @Override

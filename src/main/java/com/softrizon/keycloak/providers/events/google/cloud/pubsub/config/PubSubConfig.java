@@ -16,9 +16,19 @@ public class PubSubConfig {
     private static final Logger logger = Logger.getLogger(PubSubConfig.class);
     private static final EventPatternParser parser = new EventPatternParser();
 
+    private String serviceAccountCredentialsFilePath;
+    private String projectId;
     private String topicId;
     private final Set<EventPattern> userEventTypes = new HashSet<>();
     private final Set<EventPattern> adminEventTypes = new HashSet<>();
+
+    public String getServiceAccountCredentialsFilePath() {
+        return serviceAccountCredentialsFilePath;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
 
     public String getTopicId() {
         return topicId;
@@ -77,6 +87,16 @@ public class PubSubConfig {
         PubSubConfig config = new PubSubConfig();
         String format = EventPattern.Format.JSON_API_V1.toString();
 
+        // Process the service account google credentials
+        config.serviceAccountCredentialsFilePath = resolveConfigVariable(scope,
+                "SERVICE_ACCOUNT_CREDENTIALS_FILE_PATH", null);
+        Objects.requireNonNull(config.serviceAccountCredentialsFilePath,
+                String.format("%s: the pubsub service account credentials file path is required.", PLUGIN_NAME));
+
+        // Process the project id
+        config.projectId = resolveConfigVariable(scope, "project_id", null);
+        Objects.requireNonNull(config.projectId, String.format("%s: the project id is required.", PLUGIN_NAME));
+
         // Process the topic id
         config.topicId = resolveConfigVariable(scope, "topic_id", null);
         Objects.requireNonNull(config.topicId, String.format("%s: the topic id is required.", PLUGIN_NAME));
@@ -86,14 +106,23 @@ public class PubSubConfig {
         final EventPattern[] userEventPatterns = parseEventTypes(userEvents).stream()
                 .map(event -> parser.parse(format, event))
                 .toArray(EventPattern[]::new);
-        config.userEventTypes.addAll(Arrays.asList(userEventPatterns));
+        if (userEventPatterns.length > 0) config.userEventTypes.addAll(Arrays.asList(userEventPatterns));
 
         // Process registered admin events
         final String adminEvents = resolveConfigVariable(scope, "admin_event_patterns", "ADMIN:*:*:*:*");
         final EventPattern[] adminEventPatterns = parseEventTypes(adminEvents).stream()
                 .map(event -> parser.parse(format, event))
                 .toArray(EventPattern[]::new);
-        config.adminEventTypes.addAll(Arrays.asList(adminEventPatterns));
+        if (adminEventPatterns.length > 0) config.adminEventTypes.addAll(Arrays.asList(adminEventPatterns));
+
+        // List all event pattern rules
+        if (logger.isInfoEnabled()) {
+            logger.infof("Listing all admin event rules");
+            config.adminEventTypes.forEach(pattern -> logger.infof(pattern.toString()));
+
+            logger.infof("Listing all user event rules");
+            config.userEventTypes.forEach(pattern -> logger.infof(pattern.toString()));
+        }
 
         return config;
     }
@@ -114,12 +143,14 @@ public class PubSubConfig {
             }
         }
 
-        logger.infof("%s: configuration: %s=%s.%n", PLUGIN_NAME, variable, value);
+        logger.infof("%s: configuration: %s=%s", PLUGIN_NAME, variable, value);
 
         return value;
     }
 
     private static List<String> parseEventTypes(String events) {
+        if (events == null || events.trim().isEmpty()) return new ArrayList<>();
+
         return Arrays.stream(events.split(","))
                 .map(item -> item.trim().toUpperCase(Locale.US))
                 .collect(Collectors.toList());

@@ -58,32 +58,32 @@ public class EventPatternParser {
         // Make sure pattern length is checked
         if (parts.length != 5) {
             throw new IllegalArgumentException(String.format(Locale.US,
-                    "%s: event pattern should have exactly 5 components, but %d were found.%n",
+                    "%s: event pattern should have exactly 5 components, but %d were found.",
                     PLUGIN_NAME, parts.length));
         }
 
         // Make sure the format is checked
         if (!formats.contains(format)) {
             throw new IllegalArgumentException(String.format(Locale.US,
-                    "%s: event format should be one of: %s, but '%s' was found.%n", PLUGIN_NAME, formats, format));
+                    "%s: event format should be one of: %s, but '%s' was found.", PLUGIN_NAME, formats, format));
         }
         EventPattern.Format newFormat = EventPattern.Format.valueOf(format);
 
         // Validate the 'who' component
         if (!whos.contains(parts[0])) {
             throw new IllegalArgumentException(String.format(Locale.US,
-                    "%s: event component index 0 should be one of: %s, but '%s' was found.%n",
+                    "%s: event component index 0 should be one of: %s, but '%s' was found.",
                     PLUGIN_NAME, whos, parts[0]));
         }
         EventPattern.Who who = EventPattern.Who.valueOf(parts[0]);
 
         // Make sure the realm id is checked
         String realmId = extractRealmId(parts);
-        Objects.requireNonNull(realmId, String.format("%s: event realm id '%s' is invalid.%n", PLUGIN_NAME, parts[1]));
+        Objects.requireNonNull(realmId, String.format("%s: event realm id '%s' is invalid.", PLUGIN_NAME, parts[1]));
 
         // Make sure the result is checked
         String result = extractResult(parts, results);
-        Objects.requireNonNull(result, String.format("%s: event result should be one of: %s, but '%s' was found.%n",
+        Objects.requireNonNull(result, String.format("%s: event result should be one of: %s, but '%s' was found.",
                 PLUGIN_NAME, results, parts[2]));
 
         // Create event pattern
@@ -93,12 +93,12 @@ public class EventPatternParser {
         if (who == EventPattern.Who.ADMIN) {
             // Extract the resource type
             String resourceType = extractResourceType(parts);
-            Objects.requireNonNull(resourceType, String.format("%s: admin event resource type '%s' is invalid.%n",
+            Objects.requireNonNull(resourceType, String.format("%s: admin event resource type '%s' is invalid.",
                     PLUGIN_NAME, parts[3]));
 
             // Extract the operation type
             String operationType = extractOperationType(parts);
-            Objects.requireNonNull(operationType, String.format("%s: admin event operation type '%s' is invalid.%n",
+            Objects.requireNonNull(operationType, String.format("%s: admin event operation type '%s' is invalid.",
                     PLUGIN_NAME, parts[4]));
 
             // Event example: ADMIN:<REALM_ID>:<RESULT = SUCCESS | ERROR>:<RESOURCE_TYPE>:<OPERATION_TYPE>
@@ -107,12 +107,12 @@ public class EventPatternParser {
         } else if (who == EventPattern.Who.USER) { // Process user parameters
             // Extract the client id
             String clientId = extractClientId(parts);
-            Objects.requireNonNull(clientId, String.format("%s: event client id '%s' is invalid.%n",
+            Objects.requireNonNull(clientId, String.format("%s: event client id '%s' is invalid.",
                     PLUGIN_NAME, parts[3]));
 
             // Extract the event type
             String eventType = extractEventType(parts);
-            Objects.requireNonNull(eventType, String.format("%s: user event type '%s' is invalid.%n",
+            Objects.requireNonNull(eventType, String.format("%s: user event type '%s' is invalid.",
                     PLUGIN_NAME, parts[4]));
 
             // Event example: USER:<REALM_ID>:<RESULT = SUCCESS | ERROR>:<CLIENT_ID>:<EVENT_TYPE>

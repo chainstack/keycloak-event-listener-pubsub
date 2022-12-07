@@ -77,7 +77,7 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
                 .filter(e -> e.pattern.matcher(eventName.toUpperCase(Locale.US)).matches())
                 .findFirst();
         if (!optionalEvent.isPresent()) {
-            logger.infof("%s: ignored admin event '%s'.%n", PLUGIN_NAME, eventName);
+            logger.infof("%s: ignored admin event '%s'.", PLUGIN_NAME, eventName);
             return;
         }
 
@@ -89,7 +89,7 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
 
             publishMessage(messageJsonString, attributes);
         } catch (JsonProcessingException exception) {
-            logger.warnf(exception, "%s: failed to process JSON for admin event id '%s'.%n",
+            logger.warnf(exception, "%s: failed to process JSON for admin event id '%s'.",
                     PLUGIN_NAME, adminEvent.getId());
         }
     }
@@ -101,7 +101,7 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
                 .filter(e -> e.pattern.matcher(eventName.toUpperCase(Locale.US)).matches())
                 .findFirst();
         if (!optionalEvent.isPresent()) {
-            logger.infof("%s: ignored user event '%s'.%n", PLUGIN_NAME, eventName);
+            logger.infof("%s: ignored user event '%s'.", PLUGIN_NAME, eventName);
             return;
         }
 
@@ -113,16 +113,16 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
 
             publishMessage(messageJsonString, attributes);
         } catch (JsonProcessingException exception) {
-            logger.warnf(exception, "%s: failed to process JSON for client event id '%s'.%n",
+            logger.warnf(exception, "%s: failed to process JSON for client event id '%s'.",
                     PLUGIN_NAME, event.getId());
         }
     }
 
     private void publishMessage(String message, Map<String, String> attributes) {
         try {
-            // Log message and attributes
-            logger.infof("%s: message body: %s.", PLUGIN_NAME, message);
+            // Log message attributes and body
             logger.infof("%s: message attributes: %s.", PLUGIN_NAME, attributes.toString());
+            logger.infof("%s: message body: %s.", PLUGIN_NAME, message);
 
             ByteString data = ByteString.copyFromUtf8(message);
             PubsubMessage pubsubMessage = PubsubMessage.newBuilder()
@@ -134,18 +134,18 @@ public class PubSubEventListenerProvider implements EventListenerProvider {
 
                 // Handle message success
                 public void onSuccess(String messageId) {
-                    logger.infof("%s: sent message id '%s' to pub/sub topic '%s' successfully.%n",
+                    logger.infof("%s: sent message id '%s' to pub/sub topic '%s' successfully.",
                             PLUGIN_NAME, messageId, config.getTopicId());
                 }
 
                 // Handle message failure
                 public void onFailure(Throwable throwable) {
-                    logger.errorf(throwable, "%s: failed to send message to pub/sub topic '%s'.%n",
+                    logger.errorf(throwable, "%s: failed to send message to pub/sub topic '%s'.",
                             PLUGIN_NAME, config.getTopicId());
                 }
             }, MoreExecutors.directExecutor());
         } catch (Exception exception) {
-            logger.errorf(exception, "%s: failed to send message to pub/sub topic '%s'.%n",
+            logger.errorf(exception, "%s: failed to send message to pub/sub topic '%s'.",
                     PLUGIN_NAME, config.getTopicId());
         }
     }
