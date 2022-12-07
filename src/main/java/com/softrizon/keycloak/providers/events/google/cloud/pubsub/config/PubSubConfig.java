@@ -43,7 +43,7 @@ public class PubSubConfig {
     }
 
     public static String createEventName(AdminEvent event) {
-        // Event example: ADMIN:<REALM_ID>:<RESULT = SUCCESS | ERROR>:<RESOURCE_TYPE>:<OPERATION_TYPE>
+        // Event example: ADMIN:<REALM_ID>:<RESULT>:<RESOURCE_TYPE>:<OPERATION_TYPE>
         return String.format(Locale.US, "ADMIN:%s:%s:%s:%s",
                 event.getRealmId(), processResult(event.getError()), event.getResourceTypeAsString(),
                 event.getOperationType().toString());
@@ -51,7 +51,7 @@ public class PubSubConfig {
     }
 
     public static String createEventName(Event event) {
-        // Event example: USER:<REALM_ID>:<RESULT = SUCCESS | ERROR>:<CLIENT_ID>:<EVENT_TYPE>
+        // Event example: USER:<REALM_ID>:<RESULT>:<CLIENT_ID>:<EVENT_TYPE>
         return String.format(Locale.US, "USER:%s:%s:%s:%s",
                 event.getRealmId(), processResult(event.getError()), event.getClientId(),
                 event.getType().toString());

@@ -42,7 +42,7 @@ All components support the wildcard character `*` except for the first one.
 
 ```
 # Pattern placeholders
-USER:<REALM_ID>:<RESULT = SUCCESS | ERROR>:<CLIENT_ID>:<EVENT_TYPE>
+USER:<REALM_ID>:<RESULT>:<CLIENT_ID>:<EVENT_TYPE>
 
 # Matches all events of type user for any realm id, result, client id or event type
 USER:*:*:*:*
@@ -58,7 +58,7 @@ USER:*:SUCCESS:android-app:REGISTER
 
 ```
 # Pattern placeholders
-ADMIN:<REALM_ID>:<RESULT = SUCCESS | ERROR>:<RESOURCE_TYPE>:<OPERATION_TYPE>
+ADMIN:<REALM_ID>:<RESULT>:<RESOURCE_TYPE>:<OPERATION_TYPE>
 
 # Matches all events of type admin for any realm id, result, client id or event type
 ADMIN:*:*:*:*
@@ -66,6 +66,64 @@ ADMIN:*:*:*:*
 # Matches successfull user updates from an admin for any realm.
 ADMIN:*:SUCCESS:USER:UPDATE
 ```
+
+## Event example output
+
+All events will have a set of message attributes and body when published to the Pub Sub topic. You can use the
+attributes to filter which messages get sent to a particular
+subscription. [See how to filter messages from a subscription](https://cloud.google.com/pubsub/docs/subscription-message-filter)
+
+#### Message attributes
+
+| Field | Value | Description
+| -- | ---- | ---- |
+| format | JSON_API_V1 | The message body format and version. |
+| who | USER | Event type. Can be USER or ADMIN. |
+| realmId | super-app-realm | The id of the realm. |
+| clientId | android-app | The client id of your app. |
+| resourceType | USER | One of the possible value of the resource type enum. Link above. |
+| operationType | UPDATE | One of the possible value of the operation type enum. Link above. |
+| eventType | REGISTER | One of the possible value of the event type enum. Link above. |
+| event | USER:super-app-realm:SUCCESS:android-app:REGISTER | A fully qualify event name to use in your subscription
+filters. |
+
+#### Message body
+
+```json
+{
+  "_class": "com.softrizon.keycloak.providers.events.pubsub.events.UserEventMessage",
+  "time": 1670374956103,
+  "type": "REGISTER",
+  "realmId": "super-app-realm",
+  "clientId": "android-app",
+  "userId": "6e156e5e-4f1f-479f-8c54-11969cd2c8d2",
+  "ipAddress": "127.0.0.1",
+  "details": {
+    "auth_method": "openid-connect",
+    "auth_type": "code",
+    "register_method": "form",
+    "first_name": "John",
+    "last_name": "Doe",
+    "redirect_uri": "http://127.0.0.1:8080/realms/super-app-realm/account/#/",
+    "code_id": "6536047c-4325-41e1-a563-576777b7c70e",
+    "email": "john.doe@gmail.com",
+    "username": "john.doe@gmail.com"
+  },
+  "createdAt": "2022-12-07T01:02:36Z"
+}
+```
+
+format = JSON_API_V1
+who=ADMIN | USER
+realmId = master
+result= SUCCESS | ERROR
+clientId=test-app
+resourceType=USER
+operationType=UPDATE
+eventType=REGISTER
+event =
+USER:<REALM_ID>:<RESULT = SUCCESS | ERROR>:<CLIENT_ID>:<EVENT_TYPE>
+ADMIN:<REALM_ID>:<RESULT = SUCCESS | ERROR>:<RESOURCE_TYPE>:<OPERATION_TYPE>
 
 # Build
 
@@ -86,28 +144,3 @@ mvn clean install
 3. Restart the Keycloak server
 4. Enable logging in Keycloak UI by adding **event-listener-pubsub**
    `Manage > Events > Config > Events Config > Event Listeners`
-
-## Message attributes
-
-Event representation published to pub/sub
-
-format = JSON_API_V1
-who=ADMIN | USER
-realmId = master
-result= SUCCESS | ERROR
-clientId=test-app
-resourceType=USER
-operationType=UPDATE
-eventType=REGISTER
-event =
-USER:<REALM_ID>:<RESULT = SUCCESS | ERROR>:<CLIENT_ID>:<EVENT_TYPE>
-ADMIN:<REALM_ID>:<RESULT = SUCCESS | ERROR>:<RESOURCE_TYPE>:<OPERATION_TYPE>
-
-to accept any value on specific field, put a wildcard * on it
-
-USER.*.*.*.*
-USER.ORCAS-CUPID.SUCCESS.a2a3d88f-e42e-4ce2-b134-707cd745e352.IDENTITY_PROVIDER_RETRIEVE_TOKEN_ERROR
-USER.ORCAS-CUPID.SUCCESS.*.IDENTITY_PROVIDER_RETRIEVE_TOKEN_ERROR
-
-ADMIN.*.*.*.*
-ADMIN.ORCAS-CUPID.SUCCESS.AUTHORIZATION_RESOURCE_SERVER.CREATE

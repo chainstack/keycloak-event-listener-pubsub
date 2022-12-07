@@ -101,7 +101,7 @@ public class EventPatternParser {
             Objects.requireNonNull(operationType, String.format("%s: admin event operation type '%s' is invalid.",
                     PLUGIN_NAME, parts[4]));
 
-            // Event example: ADMIN:<REALM_ID>:<RESULT = SUCCESS | ERROR>:<RESOURCE_TYPE>:<OPERATION_TYPE>
+            // Event example: ADMIN:<REALM_ID>:<RESULT>:<RESOURCE_TYPE>:<OPERATION_TYPE>
             newPattern = Pattern.compile(String.format(Locale.US, "%s:%s:%s:%s:%s",
                     who, realmId, result, resourceType, operationType));
         } else if (who == EventPattern.Who.USER) { // Process user parameters
@@ -115,7 +115,7 @@ public class EventPatternParser {
             Objects.requireNonNull(eventType, String.format("%s: user event type '%s' is invalid.",
                     PLUGIN_NAME, parts[4]));
 
-            // Event example: USER:<REALM_ID>:<RESULT = SUCCESS | ERROR>:<CLIENT_ID>:<EVENT_TYPE>
+            // Event example: USER:<REALM_ID>:<RESULT>:<CLIENT_ID>:<EVENT_TYPE>
             newPattern = Pattern.compile(String.format(Locale.US, "%s:%s:%s:%s:%s",
                     who, realmId, result, clientId, eventType));
         }
