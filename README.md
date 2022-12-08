@@ -50,7 +50,7 @@ USER:*:*:*:*
 # Matches the REGISTER event type for any realm id, result, or client id.
 USER:*:*:*:REGISTER
 
-# Matches successfull registration of user from the the android-app client from any realm.
+# Matches successfull registration of user from the the android-app client for any realm id.
 USER:*:SUCCESS:android-app:REGISTER
 ```
 
@@ -60,31 +60,31 @@ USER:*:SUCCESS:android-app:REGISTER
 # Pattern placeholders
 ADMIN:<REALM_ID>:<RESULT>:<RESOURCE_TYPE>:<OPERATION_TYPE>
 
-# Matches all events of type admin for any realm id, result, client id or event type
+# Matches all events of type admin for any realm id, result, resource type or operation type
 ADMIN:*:*:*:*
 
-# Matches successfull user updates from an admin for any realm.
+# Matches successfull admin user updates for any realm id.
 ADMIN:*:SUCCESS:USER:UPDATE
 ```
 
 ## Event example output
 
-All events will have a set of message attributes and body when published to the Pub Sub topic. You can use the
+All events will have a set of message attributes and a body when published to the Pub/Sub topic. You can use the
 attributes to filter which messages get sent to a particular
-subscription. [See how to filter messages from a subscription](https://cloud.google.com/pubsub/docs/subscription-message-filter)
+subscription. [See how to filter messages from a subscription](https://cloud.google.com/pubsub/docs/subscription-message-filter).
 
 #### Message attributes
 
 | Field | Value | Description
 | -- | ---- | ---- |
-| format | JSON_API_V1 | The message body format and version. |
+| format | JSON_API_V1 | The message body format and version. The only one supported for now. |
 | who | USER | Event type. Can be USER or ADMIN. |
 | realmId | super-app-realm | The id of the realm. |
 | clientId | android-app | The client id of your app. |
-| resourceType | USER | One of the possible value of the resource type enum. Link above. |
-| operationType | UPDATE | One of the possible value of the operation type enum. Link above. |
-| eventType | REGISTER | One of the possible value of the event type enum. Link above. |
-| event | USER:super-app-realm:SUCCESS:android-app:REGISTER | A fully qualify event name to use in your subscription filters. |
+| resourceType | USER | One of the possible value of the resource type enum of the ink above. |
+| operationType | UPDATE | One of the possible value of the operation type enum of the link above. |
+| eventType | REGISTER | One of the possible value of the event type enum of the link above. |
+| event | USER:super-app-realm:SUCCESS:android-app:REGISTER | A fully qualified event name to use in your subscription filters. |
 
 #### Message body
 
@@ -116,8 +116,8 @@ subscription. [See how to filter messages from a subscription](https://cloud.goo
 
 ### From source
 
-Execute the command below to build and install this package locally. Post installation,
-continue with steps 3 and 4 below.
+Clone the repository and execute the command below in the project's root directory to build and install this package 
+locally. Post installation, continue with steps 3 and 4 below.
 
 ```
 mvn clean install
@@ -125,9 +125,9 @@ mvn clean install
 
 ### Download the pre-build package
 
-1. [Download the latest jar file](https://github.com/softrizon/keycloak-event-listener-google-cloud-pubsub/blob/target/event-listener-pubsub-1.0.0.jar?raw=true)
+1. [Download the latest jar file](https://github.com/softrizon/keycloak-event-listener-google-cloud-pubsub/blob/target/event-listener-pubsub-1.0.0.jar?raw=true).
 2. Copy the jar file into your bitnami Keycloak
-   installation `/opt/bitnami/keycloak/providers/event-listener-pubsub-1.0.0.jar`
-3. Restart the Keycloak server
+   installation `/opt/bitnami/keycloak/providers/event-listener-pubsub-1.0.0.jar`.
+3. Restart the Keycloak server.
 4. Enable logging in Keycloak UI by adding **event-listener-pubsub**
-   `Manage > Events > Config > Events Config > Event Listeners`
+   `Manage > Events > Config > Events Config > Event Listeners`.
