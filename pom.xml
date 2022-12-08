@@ -196,4 +196,12 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Softrizon Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/softrizon/keycloak-event-listener-pubsub</url>
+        </repository>
+    </distributionManagement>
 </project>
