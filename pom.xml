@@ -7,7 +7,7 @@
     <groupId>com.softrizon.keycloak.providers.events.pubsub</groupId>
     <artifactId>event-listener-pubsub</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>1.0</version>
 
     <name>Keycloak: Event Publisher to Google Cloud Pub/Sub</name>
 

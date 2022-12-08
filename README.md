@@ -125,9 +125,9 @@ mvn clean install
 
 ### Download the pre-build package
 
-1. [Download the latest jar file](https://github.com/softrizon/keycloak-event-listener-google-cloud-pubsub/blob/target/event-listener-pubsub-1.0.0.jar?raw=true).
+1. [Download the latest jar file](https://github.com/softrizon/keycloak-event-listener-google-cloud-pubsub/blob/target/event-listener-pubsub-1.0.jar?raw=true).
 2. Copy the jar file into your bitnami Keycloak
-   installation `/opt/bitnami/keycloak/providers/event-listener-pubsub-1.0.0.jar`.
+   installation `/opt/bitnami/keycloak/providers/event-listener-pubsub-1.0.jar`.
 3. Restart the Keycloak server.
 4. Enable logging in Keycloak UI by adding **event-listener-pubsub**
    `Manage > Events > Config > Events Config > Event Listeners`.
