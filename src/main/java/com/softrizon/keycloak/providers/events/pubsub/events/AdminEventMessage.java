@@ -6,7 +6,6 @@ import org.keycloak.events.admin.AdminEvent;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @XmlRootElement
@@ -15,18 +14,9 @@ public class AdminEventMessage extends AdminEvent implements Serializable {
 
     private static final long serialVersionUID = -1L;
 
-    private Date createdAt;
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    protected void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public static AdminEventMessage create(AdminEvent event) {
         AdminEventMessage message = new AdminEventMessage();
+        message.setId(event.getId());
         message.setAuthDetails(event.getAuthDetails());
         message.setError(event.getError());
         message.setOperationType(event.getOperationType());
@@ -34,9 +24,7 @@ public class AdminEventMessage extends AdminEvent implements Serializable {
         message.setRepresentation(event.getRepresentation());
         message.setResourcePath(event.getResourcePath());
         message.setResourceType(event.getResourceType());
-        message.setResourceTypeAsString(event.getResourceTypeAsString());
         message.setTime(event.getTime());
-        message.setCreatedAt(new Date(event.getTime()));
 
         return message;
     }

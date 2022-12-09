@@ -6,7 +6,6 @@ import org.keycloak.events.Event;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @XmlRootElement
@@ -15,18 +14,9 @@ public class UserEventMessage extends Event implements Serializable {
 
     private static final long serialVersionUID = -1L;
 
-    private Date createdAt;
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    protected void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public static UserEventMessage create(Event event) {
         UserEventMessage message = new UserEventMessage();
+        message.setId(event.getId());
         message.setClientId(event.getClientId());
         message.setDetails(event.getDetails());
         message.setError(event.getError());
@@ -34,7 +24,6 @@ public class UserEventMessage extends Event implements Serializable {
         message.setRealmId(event.getRealmId());
         message.setSessionId(event.getSessionId());
         message.setTime(event.getTime());
-        message.setCreatedAt(new Date(event.getTime()));
         message.setType(event.getType());
         message.setUserId(event.getUserId());
 
