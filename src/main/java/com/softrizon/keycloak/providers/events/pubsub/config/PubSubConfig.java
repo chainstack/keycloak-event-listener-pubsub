@@ -58,7 +58,7 @@ public class PubSubConfig {
                 event.getType().toString());
     }
 
-    public static Map<String, String> getMessageAttributes(AdminEvent event) {
+    public static Map<String, String> getMessageAttributes(AdminEvent event, EventPattern pattern) {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("format", EventPattern.Format.JSON_API_V1.toString());
         attributes.put("who", "ADMIN");
@@ -66,12 +66,12 @@ public class PubSubConfig {
         attributes.put("resourceType", event.getResourceTypeAsString());
         attributes.put("operationType", event.getOperationType().toString());
         attributes.put("result", processResult(event.getError()));
-        attributes.put("event", createEventName(event));
+        attributes.put("event", pattern.alias != null ? pattern.alias : createEventName(event));
 
         return attributes;
     }
 
-    public static Map<String, String> getMessageAttributes(Event event) {
+    public static Map<String, String> getMessageAttributes(Event event, EventPattern pattern) {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("format", EventPattern.Format.JSON_API_V1.toString());
         attributes.put("who", "USER");
@@ -79,7 +79,7 @@ public class PubSubConfig {
         attributes.put("clientId", event.getClientId());
         attributes.put("eventType", event.getType().toString());
         attributes.put("result", processResult(event.getError()));
-        attributes.put("event", createEventName(event));
+        attributes.put("event", pattern.alias != null ? pattern.alias : createEventName(event));
 
         return attributes;
     }

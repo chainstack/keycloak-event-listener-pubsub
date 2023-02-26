@@ -17,7 +17,7 @@
         <version.compiler.maven.plugin>3.8.1</version.compiler.maven.plugin>
         <version.shade.maven.plugin>3.4.1</version.shade.maven.plugin>
         <version.wildfly.maven.plugin>4.0.0.Final</version.wildfly.maven.plugin>
-        <version.keycloak>19.0.3</version.keycloak>
+        <version.keycloak>20.0.5</version.keycloak>
         <version.google-cloud-pubsub>1.121.1</version.google-cloud-pubsub>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jar.finalName>${project.artifactId}-${project.version}</jar.finalName>

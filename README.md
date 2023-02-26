@@ -1,7 +1,7 @@
 # keycloak-event-listener-pubsub
 
 This SPI allows one to listen and filter various event types from a Keycloak server
-and publishes them to a Google Cloud Pub/Sub topic. It has been deployed on Keycloak 19.0.3 server
+and publishes them to a Google Cloud Pub/Sub topic. It has been deployed on Keycloak 20.0.5 server
 on a Kubernetes cluster. We did some simple tests on Keycloak 18.0.2, so if you run into issues,
 we welcome your pull requests :).
 
@@ -67,6 +67,19 @@ ADMIN:*:*:*:*
 ADMIN:*:SUCCESS:USER:UPDATE
 ```
 
+### Event pattern with alias examples
+
+You can use aliases to rename matched events. For example, the following pattern `USER:*:SUCCESS:android-app:REGISTER`
+will match all successful user registration events from the android-app and will publish them to the Pub/Sub topic with
+the event name `USER:super-app-realm:SUCCESS:android-app:REGISTER`. Due to the 255 character-long of a Pub/Sub filter,
+you might want to use aliases to shorten the event name as follows:
+
+```
+# Use a pipe to separate the pattern from the alias and the alias will be published to the Pub/Sub topic each time we 
+# match the pattern. Different patterns can use the same alias.
+USER:*:SUCCESS:android-app:REGISTER|USR_REG
+```
+
 ## Event example output
 
 All events will have a set of message attributes and a body when published to the Pub/Sub topic. You can use the
@@ -84,7 +97,8 @@ subscription. [See how to filter messages from a subscription](https://cloud.goo
 | resourceType | USER | One of the possible value of the resource type enum of the ink above. |
 | operationType | UPDATE | One of the possible value of the operation type enum of the link above. |
 | eventType | REGISTER | One of the possible value of the event type enum of the link above. |
-| event | USER:super-app-realm:SUCCESS:android-app:REGISTER | A fully qualified event name to use in your subscription filters. |
+| event | USER:super-app-realm:SUCCESS:android-app:REGISTER | A fully qualified event name to use in your subscription
+filters. |
 
 #### Message body
 
@@ -116,7 +130,7 @@ subscription. [See how to filter messages from a subscription](https://cloud.goo
 
 ### From source
 
-Clone the repository and execute the command below in the project's root directory to build and install this package 
+Clone the repository and execute the command below in the project's root directory to build and install this package
 locally. Post installation, continue with steps 3 and 4 below.
 
 ```

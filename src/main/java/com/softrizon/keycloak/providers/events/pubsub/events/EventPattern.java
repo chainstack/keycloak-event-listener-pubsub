@@ -7,10 +7,12 @@ public class EventPattern {
 
     public final Format format;
     public final Pattern pattern;
+    public final String alias;
 
-    public EventPattern(Format format, Pattern pattern) {
+    public EventPattern(Format format, Pattern pattern, String alias) {
         this.format = format;
         this.pattern = pattern;
+        this.alias = alias;
     }
 
     @Override
@@ -18,12 +20,15 @@ public class EventPattern {
         if (this == o) return true;
         if (!(o instanceof EventPattern)) return false;
         EventPattern that = (EventPattern) o;
-        return format == that.format && pattern.pattern().equals(that.pattern.pattern());
+
+        return format == that.format
+                && pattern.pattern().equals(that.pattern.pattern())
+                && Objects.equals(alias, that.alias);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(format, pattern.pattern());
+        return Objects.hash(format, pattern.pattern(), alias);
     }
 
     @Override
@@ -31,6 +36,7 @@ public class EventPattern {
         return "EventPattern{" +
                 "format=" + format +
                 ", pattern=" + pattern +
+                ", alias=" + alias +
                 '}';
     }
 

@@ -20,6 +20,7 @@ public class EventPatternParser {
     private final Pattern RESULT_PATTERN = Pattern.compile("(?:SUCCESS|ERROR)");
     private final Pattern ENUM_TYPE_PATTERN = Pattern.compile("[0-9a-zA-Z_]+");
     private final Pattern SEMI_COLON_PATTERN = Pattern.compile(":");
+    private final Pattern PIPE_PATTERN = Pattern.compile("\\|");
 
     private final List<String> formats;
     private final List<String> results;
@@ -50,8 +51,19 @@ public class EventPatternParser {
         // Require pattern
         Objects.requireNonNull(pattern, String.format("%s: event pattern is required.", PLUGIN_NAME));
 
+        // Extract the alias if it exists
+        String alias = null;
+        String originalPattern = pattern;
+        String[] components = Arrays.stream(pattern.split(PIPE_PATTERN.pattern()))
+                .map(item -> item.trim().toUpperCase(Locale.US))
+                .toArray(String[]::new);
+        if (components.length == 2) {
+            originalPattern = components[0];
+            alias = components[1];
+        }
+
         // Extract the components
-        String[] parts = Arrays.stream(pattern.split(SEMI_COLON_PATTERN.pattern()))
+        String[] parts = Arrays.stream(originalPattern.split(SEMI_COLON_PATTERN.pattern()))
                 .map(item -> item.trim().toUpperCase(Locale.US))
                 .toArray(String[]::new);
 
@@ -120,7 +132,7 @@ public class EventPatternParser {
                     who, realmId, result, clientId, eventType));
         }
 
-        return new EventPattern(newFormat, newPattern);
+        return new EventPattern(newFormat, newPattern, alias);
     }
 
     private String extractRealmId(String[] parts) {
