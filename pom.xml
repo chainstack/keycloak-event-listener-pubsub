@@ -7,7 +7,7 @@
     <groupId>com.softrizon.keycloak.providers.events.pubsub</groupId>
     <artifactId>event-listener-pubsub</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
+    <version>1.1</version>
 
     <name>Keycloak: Event Publisher to Google Cloud Pub/Sub</name>
 
@@ -18,7 +18,7 @@
         <version.shade.maven.plugin>3.4.1</version.shade.maven.plugin>
         <version.wildfly.maven.plugin>4.0.0.Final</version.wildfly.maven.plugin>
         <version.keycloak>20.0.5</version.keycloak>
-        <version.google-cloud-pubsub>1.121.1</version.google-cloud-pubsub>
+        <version.google-cloud-pubsub>1.123.4</version.google-cloud-pubsub>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jar.finalName>${project.artifactId}-${project.version}</jar.finalName>
         <wildfly.skip>false</wildfly.skip>
