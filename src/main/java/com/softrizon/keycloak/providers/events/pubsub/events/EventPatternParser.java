@@ -55,11 +55,10 @@ public class EventPatternParser {
         String alias = null;
         String originalPattern = pattern;
         String[] components = Arrays.stream(pattern.split(PIPE_PATTERN.pattern()))
-                .map(item -> item.trim().toUpperCase(Locale.US))
                 .toArray(String[]::new);
         if (components.length == 2) {
             originalPattern = components[0];
-            alias = components[1];
+            alias = components[1].toUpperCase(Locale.US);
         }
 
         // Extract the components

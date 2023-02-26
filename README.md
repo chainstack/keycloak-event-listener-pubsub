@@ -75,8 +75,8 @@ the event name `USER:super-app-realm:SUCCESS:android-app:REGISTER`. Due to the 2
 you might want to use aliases to shorten the event name as follows:
 
 ```
-# Use a pipe to separate the pattern from the alias and the alias will be published to the Pub/Sub topic each time we 
-# match the pattern. Different patterns can use the same alias.
+# Use a pipe to separate the pattern from the alias and the alias will be published to the 
+# Pub/Sub topic each time we match the pattern. Different patterns can use the same alias.
 USER:*:SUCCESS:android-app:REGISTER|USR_REG
 ```
 
